@@ -1,0 +1,43 @@
+<html>
+	<head>
+		<title>JavaScript Ninja: Chapter 5-4 Partially applying functions</title>
+		<style>
+			#results li.pass {color: green;}
+			#results li.fail {color: red;}
+		</style>
+	</head>
+	<body>
+		<ul id="results"></ul>
+		<script>
+			//assert function
+			function assert(value, desc) {
+				var li = document.createElement("li");
+				li.className = value ? "pass" : "fail";
+				li.appendChild(document.createTextNode(desc));
+				document.getElementById("results").appendChild(li);
+
+			};
+
+			//Listing 5.10. Partially applying arguments to a native function
+			Function.prototype.partial = function() {
+				var fn = this, args = Array.prototype.slice.call(arguments);
+				return function() {
+					var j = 0;
+					for (var i = 0; i < args.length && j < arguments.length; i++) {
+						if(args[i] === undefined)
+							args[i] = arguments[j++];
+					}
+					return fn.apply(this, args);
+				}
+			}
+
+			String.prototype.csv = String.prototype.split.partial(/,\s*/);
+			var results = ("Mugan, Jin, Fuu").csv();
+
+			assert(results[0] == "Mugan" && results[1] == "Jin" && results[2] == "Fuu", "The text values were split properly!");
+
+
+
+		</script>
+	</body>
+</html>

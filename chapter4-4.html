@@ -1,0 +1,50 @@
+<html>
+	<head>
+		<title>JavaScript Ninja: Chapter 4.4</title>
+		<style>
+			#results li.pass {color: green;}
+			#results li.fail {color: red;}
+		</style>
+	</head>
+	<body>
+		<ul id="results"></ul>
+		<script>
+			//assert function
+			function assert(value, desc) {
+				var li = document.createElement("li");
+				li.className = value ? "pass" : "fail";
+				li.appendChild(document.createTextNode(desc));
+				document.getElementById("results").appendChild(li);
+
+			};
+
+			//Listing 4.11. Generic min() and max() functions for arrays
+			function largest(array) {
+				return Math.max.apply(Math, array);
+			}
+
+			function smallest(array) {
+				return Math.min.apply(Math, array);
+			}
+
+			assert(smallest([0,1,2,3]) == 0, "Located the smallest value!");
+			assert(largest([0,1,2,3]) == 3, "Located the largest value!");
+
+			//Listing 4.12. Traversing variable-length argument lists
+			function merge(root) {
+				for (var i = 1; i < arguments.length; i++) {
+					for (var prop in arguments[i])
+						root[prop] = arguments[i][prop];
+				}
+				return root;
+			}
+
+
+			var merged = merge({name: "David"}, {city: "Brussels"});
+
+			assert(merged.name == "David", "The name has been conserved!");
+			assert(merged.city == "Brussels", "The city has been added!");
+
+		</script>
+	</body>
+</html>

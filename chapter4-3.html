@@ -1,0 +1,83 @@
+<html>
+	<head>
+		<title>JavaScript Ninja: Chapter 4.3</title>
+		<style>
+			#results li.pass {color: green;}
+			#results li.fail {color: red;}
+		</style>
+	</head>
+	<body>
+		<ul id="results"></ul>
+		<input id="first"/>
+		<input id="second"/>
+		<script>
+			//assert function
+			function assert(value, desc) {
+				var li = document.createElement("li");
+				li.className = value ? "pass" : "fail";
+				li.appendChild(document.createTextNode(desc));
+				document.getElementById("results").appendChild(li);
+
+			};
+
+			//Listing 4.8. Storing a collection of unique functions
+			var store = {
+				nextId: 1,
+
+				cache: {},
+
+				add: function(fn) {
+					if(!fn.id) {
+						fn.id = store.nextId++;
+						return !!(store.cache[fn.id] = fn);
+					}
+				}
+			};
+
+			function ninja() {};
+
+			assert(store.add(ninja), "The function was safely added to the store.");
+			assert(!store.add(ninja), "But it was added only once!");
+
+			//Listing 4.9. Memoizing previously computed values
+			function isPrime(value) {
+				if(!isPrime.answers) isPrime.answers = {};
+				if(isPrime.answers[value] != null)
+					return isPrime.answers[value];
+				var prime = value != 1;
+				for (i = 2; i < value; i++) {
+					if(value % i == 0) {
+						prime = false;
+						break;
+					}
+				}
+				return isPrime.answers[value] = prime;
+			}
+
+			assert(isPrime(5), "5 is prime!");
+			assert(isPrime.answers[5], "The answer was cached!");
+
+			//Listing 4.10. Simulating array-like methods
+
+			var elems = {
+				length: 0,
+
+				add: function(elem) {
+					Array.prototype.push.call(this, elem);
+				},
+
+				gather: function(id) {
+					this.add(document.getElementById(id));
+				}
+			}
+
+			elems.gather("first");
+			assert(elems.length == 1 && elems[0].nodeType, "First has been added to the fake array!");
+			elems.gather("second");
+			assert(elems.length == 2 && elems[1].nodeType, "Second has beed added to the fake array!");
+
+
+
+		</script>
+	</body>
+</html>

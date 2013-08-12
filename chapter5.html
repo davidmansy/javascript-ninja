@@ -1,0 +1,97 @@
+<html>
+	<head>
+		<title>JavaScript Ninja: Chapter 5</title>
+		<style>
+			#results li.pass {color: green;}
+			#results li.fail {color: red;}
+			#box {border: 1px solid black; background-color: green; width: 10%;}
+			#bubble {border: 1px solid red; background-color: orange; width: 10%;}
+		</style>
+	</head>
+	<body>
+		<div id="box">BOX</div>
+		<div id="bubble">BUBBLE</div>
+		<!-- <button type="button" id="testButton">Go!</button> -->
+		<div id="testSubject"></div>
+		<ul id="results"></ul>
+		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+		<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+		<script>
+			//assert function
+			function assert(value, desc) {
+				var li = document.createElement("li");
+				li.className = value ? "pass" : "fail";
+				li.appendChild(document.createTextNode(desc));
+				document.getElementById("results").appendChild(li);
+
+			};
+
+			//Listing 5.1. A simple closure
+			var outerValue = "ninja";
+
+			function outerFunction() {
+				assert(outerValue == "ninja", "I can see the ninja!");
+			}
+
+			outerFunction();
+
+			//Listing 5.4. Using closures to approximate private variables
+			function Ninja() {
+				var feints = 0;
+
+				this.getFeints = function() {
+					return feints;
+				}
+
+				this.feints = function() {
+					feints++;
+				}
+			}
+
+			var ninja = new Ninja();
+
+			ninja.feints();
+
+			assert(ninja.getFeints() == 1, "We are able to access the internal feints count!");
+			assert(ninja.feints == undefined, "And the private data is not accessible!");
+
+			//Listing 5.5. Using closures from a callback for an Ajax request
+			jQuery("#testButton").click(function() {
+				var elem$ = jQuery("#testSubject");
+				elem$.html("Loading...");
+
+				jQuery.ajax({
+					url: "test.html",
+					success: function(html) {
+						assert(elem$, "We can access elem$, via the closure for this callback");
+						elem$.html(html);
+					}
+				});
+
+			});
+
+			//Listing 5.6. Using a closure in a timer interval callback
+			function animate(elementId) {
+				var elem = document.getElementById(elementId);
+				var tick = 0;
+
+				var timer = setInterval(function() {
+					if(tick < 100) {
+						elem.style.left = elem.style.top = tick + "px";
+						tick++;
+					} else {
+						clearInterval(timer);
+						assert(tick == 100, "Tick accessed via a closure");
+						assert(elem, "Element also accessed via a closure");
+						assert(timer, "Timer reference also accessed via a closure");
+					}
+
+				}, 10);
+			}
+
+			animate("box");
+			animate("bubble");
+
+		</script>
+	</body>
+</html>

@@ -1,0 +1,126 @@
+<html>
+	<head>
+		<title>JavaScript Ninja: Chapter 5-5 Overiding function behavior</title>
+		<style>
+			#results li.pass {color: green;}
+			#results li.fail {color: red;}
+		</style>
+	</head>
+	<body>
+		<div>DIV 0</div>
+		<div>DIV 1</div>
+		<ul id="results"></ul>
+		<script>
+			//assert function
+			function assert(value, desc) {
+				var li = document.createElement("li");
+				li.className = value ? "pass" : "fail";
+				li.appendChild(document.createTextNode(desc));
+				document.getElementById("results").appendChild(li);
+
+			};
+			/*
+			//Listing 5.13. A memoization method for functions
+			Function.prototype.memoized = function(key) {
+				this._values = this._values || {};
+				return this._values[key] !== undefined ? this._values[key] : this._values[key] = this.apply(this, arguments);
+			}
+
+			function isPrime(num) {
+				var prime = num != 1;
+				for (i = 2; i < num; i++) {
+					if (num % i == 0) {
+						prime = false;
+						break;
+					}
+				}
+				return prime;
+			}
+
+			assert(isPrime.memoized(5), "The function works, 5 is prime!");
+			assert(isPrime._values[5], "The answer has been cached!");
+			*/
+
+			//Listing 5.14. A technique for memoizing functions using closures
+			Function.prototype.memoized = function(key) {
+				this._values = this._values || {};
+				return this._values[key] !== undefined ? this._values[5] : this._values[5] = this.apply(this, arguments);
+			}
+
+
+
+			Function.prototype.memoize = function() {
+				var fn = this;
+				return function() {
+					return fn.memoized.apply(fn, arguments);
+				}
+
+			}
+
+			var isPrime = (function(num) {
+				var prime = num != 1;
+				for (var i = 2; i < num; i++) {
+					if(num % i == 0) {
+						prime = false;
+						break;
+					}
+				}
+				return prime;
+			}).memoize();
+
+			assert(isPrime(17), "17 is prime!");
+
+			//Listing 5.15. Wrapping an old function with a new piece of functionality
+			/*
+			function wrap(object, method, wrapper) {
+				var fn = object[method];
+				return object[method] = function() {
+					return wrapper.apply(this, [fn.bind(this)].concat(Array.prototype.slice.call(arguments)));
+				};
+			}
+
+			if (Prototype.Browser.Opera) {
+				wrap(Elements.Methods, "readAttribute", function(original, elem, attr) {
+					return attr == "title" ? elem.title : original(elem, attr);
+				});
+			}
+			*/
+
+			//Listing 5.16. Enforcing the use of a name within an enclosed scope
+			/*
+			$ = function() {alert("Not jQuery!")};
+
+			(function($) {
+				$('img').on('click', function() {
+					$(event.target).addClass('clickedOne');
+				});
+			})(jQuery);
+			*/
+
+			//Listing 5.17. Code in which the iterator in the closure doesn’t do what you want
+			/*
+			var divs = document.getElementsByTagName('div');
+
+			for(var i = 0; i < divs.length; i++) {
+				divs[i].addEventListener('click', function() {
+					alert("This is div #" + i + " that was clicked!");
+				}, false);
+			}
+			*/
+
+			//Listing 5.18. Using an immediate function to handle the iterator properly
+			var divs = document.getElementsByTagName('div');
+
+			for (var i = 0; i < divs.length; i ++) {
+				(function(n) {
+					divs[n].addEventListener('click', function() {
+						alert("div #" + n + " was clicked!");
+					}, false);
+				})(i);
+			}
+
+
+
+		</script>
+	</body>
+</html>

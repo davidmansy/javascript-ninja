@@ -1,0 +1,78 @@
+<html>
+	<head>
+		<title>JavaScript Ninja: Chapter 4</title>
+		<style>
+			#results li.pass {color: green;}
+			#results li.fail {color: red;}
+		</style>
+	</head>
+	<body>
+		<ul id="results"></ul>
+		<script>
+			//Listing 4.1. Common examples of using anonymous functions
+			function assert(value, desc) {
+				var li = document.createElement("li");
+				li.className = value ? "pass" : "fail";
+				li.appendChild(document.createTextNode(desc));
+				document.getElementById("results").appendChild(li);
+
+			};
+
+			//Event handler
+			window.onload = function() {assert(true, "Power!");};
+
+			var ninja = {
+				shout: function() {assert(true, "ninja");}
+			}
+
+			//Method
+			ninja.shout();
+
+			//Callback
+			setTimeout(function() {assert(true, "Forever!");}, 500);
+
+			//Listing 4.2. Chirping using a named function
+			function chirp(n) {
+				return n > 1 ? chirp(n-1) + "-chirp" : "chirp";
+			}
+
+			assert(chirp(3) == "chirp-chirp-chirp", "Calling the named function comes naturally");
+
+			//Listing 4.3. Method recursion within an object: anonymous -> this -> inline named function
+			var ninja = {
+				chirp: function signal(n) {
+					return n > 1 ? signal(n-1) + "-chirp" : "chirp";
+				}
+			}
+
+			assert(ninja.chirp(3) == "chirp-chirp-chirp", "An object property isn't too confusing, either");
+
+			//Listing 4.4-4.6 Recursion using a missing function reference
+			var samurai = { chirp: ninja.chirp};
+
+			ninja = {};
+
+			try {
+				assert(samurai.chirp(3) == "chirp-chirp-chirp", "Is this going to work?");
+			} catch(e) {
+				assert(false, "Uh this is not good, where 'd ninja.chirp() goes?");
+
+			}
+
+
+			//Listing 4.6. Verifying the identity of an inline function
+			var ninja = function myNinja() {
+				assert(ninja == myNinja, "This function is named two things at once!");
+			};
+
+			ninja();
+
+			assert(typeof myNinja == "undefined", "myNinja isn't defined outside the function!");
+
+
+
+
+
+		</script>
+	</body>
+</html>

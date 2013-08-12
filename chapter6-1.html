@@ -1,0 +1,118 @@
+<html>
+	<head>
+		<title>JavaScript Ninja: Chapter 6.1. Instantiation and prototypes</title>
+		<style>
+			#results li.pass {color: green;}
+			#results li.fail {color: red;}
+		</style>
+	</head>
+	<body>
+		<ul id="results"></ul>
+		<script>
+			//assert function
+			function assert(value, desc) {
+				var li = document.createElement("li");
+				li.className = value ? "pass" : "fail";
+				li.appendChild(document.createTextNode(desc));
+				document.getElementById("results").appendChild(li);
+
+			};
+
+			//Listing 6.1. Creating a new instance with a prototyped method
+			/*
+			function Ninja() {
+
+				Ninja.prototype.swingSword = function() {
+					return true;
+				}
+			}
+
+			var ninja1 = Ninja();
+			assert(ninja1 === undefined, "No instance of Ninja created!");
+
+			var ninja2 = new Ninja();
+
+			assert(ninja2 && ninja2.swingSword && ninja2.swingSword(), "Instance exists and method is callable");
+			
+			//Listing 6.2. Observing the precedence of initialization activities
+			function Ninja() {
+				this.swung = false;
+
+				this.swingSword = function() {
+					return !this.swung;
+				}
+			}
+
+			Ninja.prototype.swingSword = function() {
+				return this.swung;
+			}
+
+			var ninja = new Ninja();
+
+			assert(ninja.swingSword(), "Called the instance method, not the prototype method!");
+			
+			//Listing 6.3. Observing the behavior of changes to the prototype
+			function Ninja() {
+				this.swung = true;
+			}
+
+			var ninja = new Ninja();
+
+			Ninja.prototype.swingSword = function() {
+				return this.swung;
+			};
+			
+			assert(ninja.swingSword, "Method exists, even out of order!");
+			
+			//Listing 6.5. Examining the type of an instance and its constructor
+			function Ninja() {};
+
+			var ninja = new Ninja();
+
+			assert(typeof ninja == "object", "The type of the instance is object");
+			assert(typeof Ninja == "function", "The type of the function is function");
+			assert(ninja instanceof Ninja, "instanceof identifies the constructor");
+			assert(ninja.constructor == Ninja, "The ninja object was created by the Ninja function");
+			
+			//Listing 6.6. Instantiating a new object using a reference to a constructor
+			function Ninja() {};
+
+			var ninja1 = new Ninja();
+			var ninja2 = new ninja1.constructor();
+
+			assert(ninja2 instanceof Ninja, "It is a Ninja!");
+			assert(ninja1 !== ninja2, "Not the same Ninja!");
+			*/
+
+			//Listing 6.8. Achieving inheritance with prototypes
+			function Person() {};
+			Person.prototype.dance = function() {};
+
+			function Ninja() {};
+			Ninja.prototype = new Person();
+
+			var ninja = new Ninja();
+
+			assert(ninja instanceof Ninja, "ninja receives functionality from the Ninja prototype");
+			assert(ninja instanceof Person, "...and the Person prototype");
+			assert(ninja instanceof Object, "...and the Object prototype");
+			assert(typeof ninja.dance == "function", "...and can dance");
+
+			//Listing 6.9. A future-proof JavaScript 1.6 forEach() method implementation
+			if(!Array.prototype.forEach) {
+				Array.prototype.forEach = function(callback, context) {
+					for (var i = 0; i < this.length; i++) {
+						callback.call(context || null, this[i], i, this);
+					}
+				};
+			}
+
+			["a", "b", "c"].forEach(function(value, index, array) {
+				value = value.toUpperCase(); 
+				assert(value, "This is the value " + value);
+			});
+
+
+		</script>
+	</body>
+</html>

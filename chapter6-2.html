@@ -1,0 +1,89 @@
+<html>
+	<head>
+		<title>JavaScript Ninja: Chapter 6.2. The gotchas</title>
+		<style>
+			#results li.pass {color: green;}
+			#results li.fail {color: red;}
+		</style>
+	</head>
+	<body>
+		<ul id="results"></ul>
+		<script>
+			//assert function
+			function assert(value, desc) {
+				var li = document.createElement("li");
+				li.className = value ? "pass" : "fail";
+				li.appendChild(document.createTextNode(desc));
+				document.getElementById("results").appendChild(li);
+			};
+
+			//Listing 6.11. Unexpected behavior of adding extra properties to the Object prototype
+			Object.prototype.keys = function() {
+				var keys = [];
+				for (var prop in this) {
+					if (this.hasOwnProperty(prop))
+						keys.push(prop);
+				}
+				return keys;
+			}
+
+			var obj = {a:1, b:2, c:3};
+
+			assert(obj.keys().length == 3, "There are three properties in this object!");
+			/*
+			//Listing 6.13. Adding a method to the Number prototype
+			Number.prototype.add = function(num) {
+				return this + num;
+			}
+
+			var n = 5;
+			assert(n.add(3) == 8, "It works when the number is a variable!");
+			assert((5).add(3) == 8, "It works when the number is wrapped in parentheses!");
+			assert(5.add(3) == 8, "What about a simple literal?");
+			
+
+			//Listing 6.14. Subclassing the Array object
+			function MyArray() {};
+			MyArray.prototype = new Array();
+
+			var mine = new MyArray();
+
+			mine.push(1, 2, 3);
+
+			assert(mine.length == 3, "Lenght seems to work!");
+			assert(mine instanceof Array, "My new array is instance of Array? Yes but this does not work in IE!");
+			*/
+
+			//Listing 6.15. Simulating Array functionality but without the true subclassing
+			function MyArray() {};
+			MyArray.prototype.length = 0;
+/*
+			(function() {
+				var methods = ["push", "pop", "shift", "unshift", "slice", "spice", "join"];
+
+				for (var i = 0; i < methods.length; i++)
+					(function(name) {
+						MyArray.prototype[name] = function() {
+							return Array.prototype[name].apply(this, arguments);
+						}
+					})(methods[i]);
+			})();
+*/
+			var methods = ["push", "pop", "shift", "unshift", "slice", "spice", "join"];
+
+			for (var i = 0; i < methods.length; i++) {
+				MyArray.prototype[methods[i]] = function() {
+						return Array.prototype[methods[i]].apply(this, arguments);
+				}
+			}
+
+			var mine = new MyArray();
+
+			mine.push(1, 2, 3);
+
+			assert(mine.length == 3, "Lenght seems to work! Our items are in the sub-classed array!");
+			assert(mine instanceof Array, "My new array is instance of Array? No!");
+
+		</script>
+	</body>
+</html>

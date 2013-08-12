@@ -1,0 +1,44 @@
+<html>
+	<head>
+		<title>JavaScript Ninja: Chapter 5-3 Binding function contexts</title>
+		<style>
+			#results li.pass {color: green;}
+			#results li.fail {color: red;}
+		</style>
+	</head>
+	<body>
+		<button id="test">Click me!</button>
+		<ul id="results"></ul>
+		<script>
+			//assert function
+			function assert(value, desc) {
+				var li = document.createElement("li");
+				li.className = value ? "pass" : "fail";
+				li.appendChild(document.createTextNode(desc));
+				document.getElementById("results").appendChild(li);
+
+			};
+
+			//Listing 5.7. Binding a specific context to a function
+			function bind(context, name) {
+				return function() {
+					return context[name].apply(context, arguments);
+				};
+			}
+
+
+			var button = {
+				clicked: false,
+				click: function() {
+					this.clicked = true;
+					assert(button.clicked, "The button has been clicked");
+				}
+			}
+
+			var elem = document.getElementById("test");
+			elem.addEventListener("click", bind(button, "click"), false);
+
+
+		</script>
+	</body>
+</html>
