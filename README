@@ -1,6 +1,10 @@
-Hello,
+Hi,
 
-I am reading the book "Secrets of the Javascript Ninja" and each time there is an example, I read it once or twice then I write it myself. Finally I compare my code with the example and upgrade my code if needed.
+I am reading the book "Secrets of the Javascript Ninja".
+
+As a JavaScript beginner, I focus on the chapters included in the part "Apprentice training". The explanations about functional programming, closures and object-oriented programming in JS are really good, you clearly get how it works (and specially if you have any experience with classical OO language like Java, you'll be so surprised!).
+
+Unfortunately the book does not include any challenges or exercises so what I do is reading the examples, get the algorithm and then rewrite them from memory. It is not as efficient as solving exercises but much better than just reading. You need to code if you want to grasp the concepts.
 
 I enjoy keeping a trace on github of this journey.
 
