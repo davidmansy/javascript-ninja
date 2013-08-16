@@ -15,29 +15,27 @@
 				li.className = value ? "pass" : "fail";
 				li.appendChild(document.createTextNode(desc));
 				document.getElementById("results").appendChild(li);
-
 			};
 
 			//Listing 6.1. Creating a new instance with a prototyped method
 			/*
-			function Ninja() {
+			function Ninja() {}
 
-				Ninja.prototype.swingSword = function() {
+			Ninja.prototype.swingSword = function() {
 					return true;
-				}
 			}
 
 			var ninja1 = Ninja();
-			assert(ninja1 === undefined, "No instance of Ninja created!");
+			assert(ninja1 === undefined, "Listing 6.1: No instance of Ninja created!");
 
 			var ninja2 = new Ninja();
 
-			assert(ninja2 && ninja2.swingSword && ninja2.swingSword(), "Instance exists and method is callable");
+			assert(ninja2 && ninja2.swingSword && ninja2.swingSword(), "Listing 6.1: Instance exists and method is callable");
 			
 			//Listing 6.2. Observing the precedence of initialization activities
+			
 			function Ninja() {
 				this.swung = false;
-
 				this.swingSword = function() {
 					return !this.swung;
 				}
@@ -49,8 +47,8 @@
 
 			var ninja = new Ninja();
 
-			assert(ninja.swingSword(), "Called the instance method, not the prototype method!");
-			
+			assert(ninja.swingSword, "Listing 6.2: Called the instance method, not the prototype method.");
+
 			//Listing 6.3. Observing the behavior of changes to the prototype
 			function Ninja() {
 				this.swung = true;
@@ -60,10 +58,28 @@
 
 			Ninja.prototype.swingSword = function() {
 				return this.swung;
+			}
+
+			console.log(ninja.swingSword());
+			assert(ninja.swingSword(), "Listing 6.3: Method exists, even out of order");
+
+			//Listing 6.4 Further observing the behavior of changes to the prototype
+			function Ninja() {
+				this.swung = true;
+				this.swingSword = function() {
+					return !this.swung;
+				}
+			}
+
+			var ninja = new Ninja();
+
+			Ninja.prototype.swingSword = function() {
+				return this.swingSword();
 			};
-			
-			assert(ninja.swingSword, "Method exists, even out of order!");
-			
+
+			assert(ninja.swingSword, "Listing 6.4: Called the instance method again!");
+
+
 			//Listing 6.5. Examining the type of an instance and its constructor
 			function Ninja() {};
 
@@ -82,36 +98,34 @@
 
 			assert(ninja2 instanceof Ninja, "It is a Ninja!");
 			assert(ninja1 !== ninja2, "Not the same Ninja!");
-			*/
 
 			//Listing 6.8. Achieving inheritance with prototypes
-			function Person() {};
+			function Person() {}
 			Person.prototype.dance = function() {};
 
-			function Ninja() {};
+			function Ninja() {}
 			Ninja.prototype = new Person();
 
 			var ninja = new Ninja();
 
-			assert(ninja instanceof Ninja, "ninja receives functionality from the Ninja prototype");
-			assert(ninja instanceof Person, "...and the Person prototype");
-			assert(ninja instanceof Object, "...and the Object prototype");
-			assert(typeof ninja.dance == "function", "...and can dance");
-
+			assert(ninja instanceof Ninja, "Listing 6.8: ninja receives functionality from the Ninja prototype");
+			assert(ninja instanceof Person, "Listing 6.8: ninja receives functionality from the Person prototype");
+			assert(ninja instanceof Object, "Listing 6.8: ninja receives functionality from the Object prototype");
+			assert(typeof ninja.dance == "function", "Listing 6.8: ...and can dance!");
+			*/
 			//Listing 6.9. A future-proof JavaScript 1.6 forEach() method implementation
-			if(!Array.prototype.forEach) {
+//			if(!Array.prototype.forEach) {
+
 				Array.prototype.forEach = function(callback, context) {
-					for (var i = 0; i < this.length; i++) {
+					for(var i = 0; i < this.length; i++) {
 						callback.call(context || null, this[i], i, this);
 					}
 				};
-			}
+//			}
 
-			["a", "b", "c"].forEach(function(value, index, array) {
-				value = value.toUpperCase(); 
-				assert(value, "This is the value " + value);
+			[5, 10, 15, 20].forEach(function(value, index, array) {
+				assert(value, "Listing 6.9: " + value + " is in position " + index + " out of " + (array.length - 1));
 			});
-
 
 		</script>
 	</body>
